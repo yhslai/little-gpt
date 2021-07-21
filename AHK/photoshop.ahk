@@ -11,8 +11,14 @@ SetWorkingDir, %A_ScriptDir%
 
 #IfWinActive ahk_exe Photoshop.exe
 *F1::*F12
-Tab::F16
-v::F17
+
+Tab::
+Send {F16}
+return
+
+v::
+Send {F17}
+return
 
 #IfWinActive Color Picker ahk_exe Photoshop.exe 
 c::Enter
