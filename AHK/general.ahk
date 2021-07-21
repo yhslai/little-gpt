@@ -16,16 +16,16 @@ Return
 `::ShiftAltTab
 
 ; PageUp / PageDown / Home / End
-RCtrl & Up::
+RAlt & Up::
 Send {RCtrl up}{PgUp}
 Return
-RCtrl & Down::
+RAlt & Down::
 Send {RCtrl up}{PgDn}
 Return
-RCtrl & Left::
+RAlt & Left::
 Send {RCtrl up}{Home}
 Return
-RCtrl & Right::
+RAlt & Right::
 Send {RCtrl up}{End}
 Return
 
@@ -38,11 +38,11 @@ Send {RAlt up}{Ctrl down}{PgDn}{Ctrl up}
 Return
 
 ; Emulate scroll
-RAlt & up::
+RCtrl & up::
 Loop 6
     Click, WheelUp
 return
-RAlt & down::
+RCtrl & down::
 Loop 6
     Click, WheelDown
 return
