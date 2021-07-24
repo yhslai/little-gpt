@@ -10,7 +10,7 @@ SetTitleMatchMode, 2
 
 Loop {
   SetTitleMatchMode, RegEx
-  regex := "ahk_exe i)(.*code.*)|(.*blender.*)|(.*photoshop.*)"
+  regex := "ahk_exe i)(.*Code.*)|(.*Blender.*)|(.*photoshop.*)"
   ; regex := "(.*Visual Studio Code.*)|(.*Blender.*)|(.*Photoshop.*)"
   WinWaitActive, %regex%
   SetDefaultKeyboard(0x0409)  ; English
