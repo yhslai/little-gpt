@@ -4,6 +4,8 @@ SetWorkingDir, %A_ScriptDir%
 
 SetNumLockState, AlwaysOn  ; Keep num lock on
 
+#IfWinNotActive ahk_exe Code.exe
+
 ; Mac-style quit tab/app
 !w::
 Send {Alt up}{LCtrl down}w{LCtrl up}
