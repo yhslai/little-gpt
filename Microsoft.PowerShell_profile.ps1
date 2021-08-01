@@ -19,3 +19,4 @@ Set-PSReadlineKeyHandler -Key Ctrl+s -Function ForwardSearchHistory
 Set-PSReadlineKeyHandler -Key Ctrl+f -Function ForwardChar
 
 $env:Path += ";$HOME\Documents\github\little_windows\bin"
+Import-Module posh-git

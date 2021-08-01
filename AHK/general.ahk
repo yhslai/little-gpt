@@ -30,10 +30,10 @@ Send {RCtrl up}{End}
 Return
 
 ; Previous/Next tab
-![::
+RAlt & [::
 Send {RAlt up}{Ctrl down}{PgUp}{Ctrl up}
 Return
-!]::
+RAlt & ]::
 Send {RAlt up}{Ctrl down}{PgDn}{Ctrl up}
 Return
 
