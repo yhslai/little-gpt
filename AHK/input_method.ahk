@@ -3,9 +3,11 @@
 SendMode Input
 SetWorkingDir, %A_ScriptDir%
 
+if not A_IsAdmin
+	Run *RunAs "%A_ScriptFullPath%" ; 
+
 
 SetTitleMatchMode, 2
-
 
 
 Loop {
