@@ -19,4 +19,9 @@ Set-PSReadlineKeyHandler -Key Ctrl+s -Function ForwardSearchHistory
 Set-PSReadlineKeyHandler -Key Ctrl+f -Function ForwardChar
 
 $env:Path += ";$HOME\Documents\github\little_windows\bin"
-Import-Module posh-git
+
+function global:prompt {
+    $ESC = [char]27
+    $regex = [regex]::Escape($HOME) + "(\\.*)*$"
+    "$ESC[36mPS $($executionContext.SessionState.Path.CurrentLocation.Path -replace $regex, '~$1')$('>' * ($nestedPromptLevel + 1)) $ESC[0m";
+}
