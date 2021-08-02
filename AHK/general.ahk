@@ -7,8 +7,8 @@ SetNumLockState, AlwaysOn  ; Keep num lock on
 #IfWinNotActive ahk_exe Code.exe
 
 ; Mac-style quit tab/app
-!w::
-Send {Alt up}{LCtrl down}w{LCtrl up}
+LAlt & w::
+Send {LAlt up}{LCtrl down}w{LCtrl up}
 Return
 
 !q::!F4
