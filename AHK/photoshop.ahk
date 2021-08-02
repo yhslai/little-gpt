@@ -16,7 +16,7 @@ return
 
 ; Map 'V' to F17 to toggle Modificator
 v::
-Send {F17}
+Send {F17}{v}
 return
 
 ; Map 'Numpad1/3' to F15/^F15 to mark layer and jump to marked layer
