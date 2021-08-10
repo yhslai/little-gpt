@@ -20,10 +20,10 @@ Send {F17}{v}
 return
 
 ; Map 'NumpadDiv/NumpadMult' to mark layer and jump to marked layer
-NumpadDiv::F15
-+NumpadDiv::+F15
-NumpadMult::F13
-+NumpadMult::+F13
+NumpadDiv::F13
++NumpadDiv::+F13
+NumpadMult::F15
++NumpadMult::+F15
 
 ; Map 'Numpad2/5' to F14/^F14 and  to jump to bottom/top of clipping stack 
 Numpad2::F14
