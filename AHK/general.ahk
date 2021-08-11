@@ -12,7 +12,7 @@ return
 
 AlwaysOnTop:
 SplashTextOn,,, Please switch window...
-Sleep, 1500
+Sleep, 1000
 Winset, AlwaysOnTop, , A
 SplashTextOn,,, Always on top toggled!
 Sleep, 1000
