@@ -4,6 +4,23 @@ SetWorkingDir, %A_ScriptDir%
 
 SetNumLockState, AlwaysOn  ; Keep num lock on
 
+
+; Keep a window on top
+#Persistent
+Menu, Tray, Add, Toggle Always On Top, AlwaysOnTop
+return
+
+AlwaysOnTop:
+SplashTextOn,,, Please switch window...
+Sleep, 1500
+Winset, AlwaysOnTop, , A
+SplashTextOn,,, Always on top toggled!
+Sleep, 1000
+SplashTextOff
+return
+
+
+
 #IfWinNotActive ahk_exe Code.exe
 
 ; Mac-style quit tab/app
