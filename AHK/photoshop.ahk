@@ -15,8 +15,13 @@ Send {F16}
 return
 
 ; Map 'V' to F17 to toggle Modificator
-v::
-Send {F17}{v}
+~v::
+Send {F17}
+return
+
+; Map 'C' to F18 to toggle Coolorus
+~c::
+Send {F18}
 return
 
 ; Map 'NumpadDiv/NumpadMult' to mark layer and jump to marked layer
@@ -39,20 +44,28 @@ Numpad3::!]
 
 
 ; Map Alt + RMB drag to Zoom tool
-
-LAlt & RButton::
-MouseGetPos, x, y
+<!RButton::
 Send {RButton up}{LAlt up}{Z down}{LButton down}
 return
 
 ; Can't switch to original tool... just switch to brush for now
-LAlt & RButton Up::
+<!RButton Up::
 Send {LAlt up}{LButton up}{Z up}{W down}
 return
 
 
-; Map 'C' to return to toggle Color Picker
-#IfWinActive Color Picker ahk_exe Photoshop.exe 
-c::Enter
+; Map Alt + RMB drag to Zoom tool
+#LButton::
+ToolTip, down
+Send {# up}{LAlt down}{RButton down}
+return
+
+#LButton up::
+Send {RButton up}{LAlt up}
+return
+
+; ; Map 'C' to return to toggle Color Picker
+; #IfWinActive Color Picker ahk_exe Photoshop.exe 
+; c::Enter
 
 #IfWinActive
