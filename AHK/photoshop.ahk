@@ -36,6 +36,21 @@ Numpad8::+^F14
 Numpad1::![
 Numpad3::!]
 
+
+
+; Map Alt + RMB drag to Zoom tool
+
+LAlt & RButton::
+MouseGetPos, x, y
+Send {RButton up}{LAlt up}{Z down}{LButton down}
+return
+
+; Can't switch to original tool... just switch to brush for now
+LAlt & RButton Up::
+Send {LAlt up}{LButton up}{Z up}{W down}
+return
+
+
 ; Map 'C' to return to toggle Color Picker
 #IfWinActive Color Picker ahk_exe Photoshop.exe 
 c::Enter
