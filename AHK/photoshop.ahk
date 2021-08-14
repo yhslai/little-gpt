@@ -56,7 +56,6 @@ return
 
 ; Map Alt + RMB drag to Zoom tool
 #LButton::
-ToolTip, down
 Send {# up}{LAlt down}{RButton down}
 return
 
