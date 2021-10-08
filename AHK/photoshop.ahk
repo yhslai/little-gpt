@@ -30,38 +30,7 @@ NumpadDiv::F13
 NumpadMult::F15
 +NumpadMult::+F15
 
-; Map 'Numpad2/5' to F14/^F14 and  to jump to bottom/top of clipping stack 
-Numpad2::F14
-Numpad5::^F14
 
-; Map 'Numpad8' to +^F14 and to create a new layer on top of clipping stack
-Numpad8::+^F14
-
-; Map 'Numpad1/3' to ![/] to select previous/next layer
-Numpad1::![
-Numpad3::!]
-
-
-
-; Map Alt + RMB drag to Zoom tool
-<!RButton::
-Send {RButton up}{LAlt up}{Z down}{LButton down}
-return
-
-; Can't switch to original tool... just switch to brush for now
-<!RButton Up::
-Send {LAlt up}{LButton up}{Z up}{W down}
-return
-
-
-; Map Alt + RMB drag to Zoom tool
-#LButton::
-Send {# up}{LAlt down}{RButton down}
-return
-
-#LButton up::
-Send {RButton up}{LAlt up}
-return
 
 ; ; Map 'C' to return to toggle Color Picker
 ; #IfWinActive Color Picker ahk_exe Photoshop.exe 

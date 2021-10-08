@@ -20,8 +20,11 @@ Set-PSReadlineKeyHandler -Key Ctrl+f -Function ForwardChar
 
 $env:Path += ";$HOME\Documents\github\little_windows\bin"
 
+# Linux HOME
+$env:LHOME = "\\wsl$\Ubuntu\home\raincole"
+
 function global:prompt {
     $ESC = [char]27
     $regex = [regex]::Escape($HOME) + "(\\.*)*$"
-    "$ESC[36mPS $($executionContext.SessionState.Path.CurrentLocation.Path -replace $regex, '~$1')$('>' * ($nestedPromptLevel + 1)) $ESC[0m";
+    "$ESC[36m$($executionContext.SessionState.Path.CurrentLocation.Path -replace $regex, '~$1')$('>' * ($nestedPromptLevel + 1)) $ESC[0m";
 }
