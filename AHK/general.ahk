@@ -19,20 +19,11 @@ Sleep, 1000
 SplashTextOff
 return
 
+; Mac-style alt+`
+`::ShiftAltTab
 
 
 #IfWinNotActive ahk_exe Code.exe
-
-; Mac-style quit tab/app
-LAlt & w::
-Send {LAlt up}{LCtrl down}w{LCtrl up}
-Return
-
-!q::!F4
-Return
-
-; Mac-style alt+`
-`::ShiftAltTab
 
 ; PageUp / PageDown / Home / End
 RCtrl & Up::
@@ -48,13 +39,6 @@ RCtrl & Right::
 Send {RCtrl up}{End}
 Return
 
-; Previous/Next tab
-RAlt & [::
-Send {RAlt up}{Ctrl down}{PgUp}{Ctrl up}
-Return
-RAlt & ]::
-Send {RAlt up}{Ctrl down}{PgDn}{Ctrl up}
-Return
 
 ; Emulate scroll
 RAlt & up::
@@ -65,4 +49,3 @@ RAlt & down::
 Loop 6
     Click, WheelDown
 return
-
