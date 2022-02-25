@@ -18,7 +18,7 @@ Set-PSReadlineKeyHandler -Key Ctrl+r -Function ReverseSearchHistory
 Set-PSReadlineKeyHandler -Key Ctrl+s -Function ForwardSearchHistory
 Set-PSReadlineKeyHandler -Key Ctrl+f -Function ForwardChar
 
-$env:Path += ";$HOME\Documents\github\little_windows\bin"
+$env:Path += ";$HOME\github\little_windows\bin;C:\Program Files\cmake\bin;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build;C:\Program Files\Perforce"
 
 # Linux HOME
 $env:LHOME = "\\wsl$\Ubuntu\home\raincole"
@@ -28,3 +28,7 @@ function global:prompt {
     $regex = [regex]::Escape($HOME) + "(\\.*)*$"
     "$ESC[36m$($executionContext.SessionState.Path.CurrentLocation.Path -replace $regex, '~$1')$('>' * ($nestedPromptLevel + 1)) $ESC[0m";
 }
+
+$current_directory = pwd
+& 'C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\Launch-VsDevShell.ps1'
+cd $current_directory
