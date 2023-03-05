@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>OpenAI API Request</title>
+    <link rel="stylesheet" href="/static/css/simple.css">
+    <link rel="stylesheet" href="/static/css/openai_console.css">
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/openai_console.js"></script>
+	<script src="/static/js/shortcuts.js"></script>
+</head>
+<body>
+	<div class="tabs">
+		<button class="tablink active" data-tab="Complete" onclick="openTab(event, 'Complete')">Complete</button>
+		<button class="tablink" data-tab="Edit" onclick="openTab(event, 'Edit')">Edit</button>
+		<button class="tablink" data-tab="Chat" onclick="openTab(event, 'Chat')">Chat</button>
+	</div>
+
+	<div class="tab-container active" data-tab="Complete">
+		<div class="left-column">
+			<form class="main-form" id="complete_form" action="/openai/api/complete" method="post">
+				<label class="inline-label" for="model">Model:</label>
+				<select name="model" value="text-davinci-003">
+					<option value="text-davinci-003">text-davinci-003</option>
+				</select><br>
+				<label for="prompt">Prompt:</label>
+				<textarea name="prompt" rows="8" cols="50"></textarea><br/>
+		
+				<div class="parameters">
+
+					<div class="parameter">
+					<label for="max_tokens">Max Tokens:</label>
+					<input type="range" name="max_tokens" min="50" max="4000" step="1" value="100">
+					<span data-slider="max_tokens">50</span>
+					</div>
+					<div class="parameter">
+					<label for="n">Choices (n):</label>
+					<input type="range" name="n" min="1" max="4" step="1" value="1">
+					<span data-slider="n">1</span>
+					</div>
+			
+					<div class="parameter">
+					<label for="temperature">Temperature:</label>
+					<input type="range" name="temperature" min="0" max="2" step="0.1" value="1">
+					<span data-slider="temperature">0.5</span>
+					</div>
+
+					<div class="parameter">
+					<label for="top_p">Top P:</label>
+					<input type="range" name="top_p" min="0" max="1" step="0.1" value="1">
+					<span data-slider="top_p">1</span>
+					</div>
+
+					<div class="parameter">
+					<label for="frequency_penalty">Frequency Penalty:</label>
+					<input type="range" name="frequency_penalty" min="0" max="2" step="0.1" value="0">
+					<span data-slider="frequency_penalty">0</span>
+					</div>
+
+					<div class="parameter">
+					<label for="presence_penalty">Presence Penalty:</label>
+					<input type="range" name="presence_penalty" min="0" max="2" step="0.1" value="0">
+					<span data-slider="presence_penalty">0</span>
+					</div>
+
+				</div>
+		
+				<br/>
+				<button class="submit" type="submit">Submit</button>
+			</form>
+		</div>
+
+		<div class="right-column">
+			<div class="errors">
+			</div>
+			<div class="response">
+				<div class="header">
+					<span>Response</span>
+				</div>
+				<div class="response-body-choices">
+					<div class="response-body-choice">
+						<div class="response-text"></div>
+						<div class="response-footer">
+							<div class="response-finish-reason">Finish Reason:</div>
+						</div>
+					</div>
+				</div>
+				<div class="header">
+					<span>Metadata</span>
+				</div>
+				<div class="response-metadata">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="tab-container" data-tab="Edit">
+		<div class="left-column">
+			<form class="main-form" id="edit_form" action="/openai/api/edit" method="post">
+				<label class="inline-label" for="model">Model:</label>
+				<select name="model" value="text-davinci-edit-001">
+					<option value="text-davinci-edit-001">text-davinci-edit-001</option>
+					<option value="code-davinci-edit-001">code-davinci-edit-001</option>
+				</select><br>
+
+				<label for="input">Input:</label>
+				<textarea name="input" rows="6" cols="50"></textarea><br/>
+
+				<label for="instruction">Instruction:</label>
+				<textarea name="instruction" rows="3" cols="50"></textarea><br/>
+
+		
+				<div class="parameters">
+					<div class="parameter">
+					<label for="n">Choices (n):</label>
+					<input type="range" name="n" min="1" max="4" step="1" value="1">
+					<span data-slider="n">1</span>
+					</div>
+
+					<div class="parameter">
+					</div>
+			
+					<div class="parameter">
+					<label for="temperature">Temperature:</label>
+					<input type="range" name="temperature" min="0" max="1" step="0.1" value="1">
+					<span data-slider="temperature">0.5</span>
+					</div>
+
+					<div class="parameter">
+					<label for="top_p">Top P:</label>
+					<input type="range" name="top_p" min="0" max="1" step="0.1" value="1">
+					<span data-slider="top_p">1</span>
+					</div>
+				</div>
+		
+				<br/>
+				<button class="submit" type="submit">Submit</button>
+			</form>
+		</div>
+
+		<div class="right-column">
+			<div class="errors">
+			</div>
+			<div class="response">
+				<div class="header">
+					<span>Response</span>
+				</div>
+				<div class="response-body-choices">
+					<div class="response-body-choice">
+						<div class="response-text"></div>
+						<div class="response-footer">
+							<div class="response-finish-reason">Finish Reason:</div>
+						</div>
+					</div>
+				</div>
+				<div class="header">
+					<span>Metadata</span>
+				</div>
+				<div class="response-metadata">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="tab-container chat" data-tab="Chat">
+		<div class="left-column">
+			<form class="main-form" id="chat_form" action="/openai/api/chat" method="post">
+				<label class="inline-label" for="model">Model:</label>
+				<select name="model" value="gpt-3.5-turbo">
+					<option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+					<option value="gpt-3.5-turbo-0301">gpt-3.5-turbo-0301</option>
+				</select><br>
+
+				<label>Messages:</label>
+				<div class="messages">
+					<button class="delete-message hidden" type="button">X</button>
+					<div class="message" data-role="system" data-placeholder="(system)" contenteditable=""></div>
+					<div class="message" data-role="user" data-placeholder="(user)" contenteditable=""></div>
+				</div>
+
+				<div class="parameters">
+
+					<div class="parameter">
+					<label for="max_tokens">Max Tokens:</label>
+					<input type="range" name="max_tokens" min="50" max="4000" step="1" value="100">
+					<span data-slider="max_tokens">50</span>
+					</div>
+					<div class="parameter">
+					<label for="n">Choices (n):</label>
+					<input type="range" name="n" min="1" max="4" step="1" value="1">
+					<span data-slider="n">1</span>
+					</div>
+			
+					<div class="parameter">
+					<label for="temperature">Temperature:</label>
+					<input type="range" name="temperature" min="0" max="2" step="0.1" value="1">
+					<span data-slider="temperature">0.5</span>
+					</div>
+
+					<div class="parameter">
+					<label for="top_p">Top P:</label>
+					<input type="range" name="top_p" min="0" max="1" step="0.1" value="1">
+					<span data-slider="top_p">1</span>
+					</div>
+
+					<div class="parameter">
+					<label for="frequency_penalty">Frequency Penalty:</label>
+					<input type="range" name="frequency_penalty" min="0" max="2" step="0.1" value="0">
+					<span data-slider="frequency_penalty">0</span>
+					</div>
+
+					<div class="parameter">
+					<label for="presence_penalty">Presence Penalty:</label>
+					<input type="range" name="presence_penalty" min="0" max="2" step="0.1" value="0">
+					<span data-slider="presence_penalty">0</span>
+					</div>
+
+				</div>
+		
+				<br/>
+				<button class="submit" type="submit">Submit</button>
+			</form>
+		</div>
+
+		<div class="right-column">
+			<div class="errors">
+			</div>
+			<div class="response">
+				<div class="header">
+					<span>Response</span>
+				</div>
+				<div class="response-body-choices">
+					<div class="response-body-choice">
+						<div class="response-text"></div>
+						<div class="response-footer">
+							<button class="response-chat-add"><<-</button>
+							<div class="response-finish-reason">Finish Reason:</div>
+						</div>
+					</div>
+				</div>
+				<div class="header">
+					<span>Metadata</span>
+				</div>
+				<div class="response-metadata">
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>
+
+
+
+
+

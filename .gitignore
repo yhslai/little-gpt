@@ -1,0 +1,11 @@
+# Python
+__pycache__
+.mypy_cache
+*.pyc
+
+# Config
+
+config.yaml
+
+# VS Code
+.vscode

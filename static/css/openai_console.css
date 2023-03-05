@@ -1,0 +1,249 @@
+html, body {
+    height: 100%;
+}
+body {
+    margin: 0;
+    display: block;
+    font-size: 1rem;
+}
+
+label.inline-label {
+    display: inline-block;
+    margin: 0 4px;
+}
+
+
+.tab-container {
+    border-top: #7f7f7f 1px dashed;
+    height: 100%;
+    padding: 0 12px;
+    margin: 0;
+    flex-direction: row;
+    justify-content: center;
+    display: none;
+}
+
+.tab-container.active {
+    display: flex;
+}
+
+.tab-container > .left-column, .tab-container > .right-column {
+    position: relative;
+    padding: 12px 36px;
+    box-sizing: border-box;
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.tab-container > .left-column {
+    border-right: 1px dashed #201111;
+    padding-left: 24px;
+    width: 50%;
+}
+
+.tab-container.chat > .left-column {
+    width: 65%;
+}
+
+.tab-container.chat .messages {
+    position: relative;
+    margin: 4px 0 12px;
+    padding-bottom: 4px;
+    border-bottom: #7f7f7f 1px dashed;
+}
+
+.tab-container.chat .message {
+    resize: none;
+    height: fit-content;
+    min-height: 24px;
+    padding: 6px 10px;
+    margin: 4px 0px;
+    border-radius: 8px;
+    position: relative;
+}
+
+/* style when .message is empty */
+.tab-container.chat .message:empty:before {
+    content: attr(data-placeholder);
+    color: #7f7f7f;
+}
+
+.tab-container.chat .message[data-role="system"] {
+    background-color: #d2f4f2;
+    text-align: center;
+}
+
+.tab-container.chat .message[data-role="user"] {
+    background-color: #ffffff;
+    text-align: right;
+}
+
+.tab-container.chat .message[data-role="assistant"] {
+    background-color: #e4e4e4;
+    text-align: left;
+}
+
+.tab-container.chat .message.hover {
+    border: 1px solid #7f7f7f;
+}
+
+.tab-container.chat .delete-message {
+    /* right next to its parent without affecting its content */
+    position: absolute;
+    top: 4px;
+    right: -30px;
+    margin: 0;
+    padding: 4px;
+    width: 24px;
+    height: 24px;
+    /* text vertically centered */
+    line-height: 16px;
+    background-color: transparent;
+    color: #e45353;
+    border: #e45353 1px solid;
+}
+
+.tab-container.chat .delete-message:hover {
+    background-color: #e45353;
+    color: #ffffff;
+}
+
+.tab-container.chat .delete-message.hidden {
+    /* display: none; */
+}
+
+
+.left-column label {
+    font-size: 1rem;
+    margin: 4px 0;
+}
+
+.left-column textarea {
+    width: 100%;
+    font-size: 1rem;
+}
+
+.tab-container > .right-column {
+    padding-right: 24px;
+    width: 50%;
+}
+
+.right-column .header {
+    font-size: 1rem;
+    margin: 4px 0;
+}
+
+.waiting-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    pointer-events: none;
+}
+
+
+.main-form .parameters {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-content: flex-start;
+    font-size: 0.9rem;
+    line-height: 1rem;
+}
+
+.main-form .parameters .parameter {
+    flex: 0 0 50%;
+    box-sizing: border-box;
+    padding: 4px;
+}
+
+.main-form .parameters .parameter label {
+    font-size: 0.9rem;
+}
+
+textarea, select, input {
+    margin-bottom: 4px;
+}
+
+.response-choice {
+    margin: 12px 0;
+}
+
+.response-text {
+    /* dashed line border */
+    border: 1px dashed #201111;
+    width: 100%;
+    /* height auto fit the content */
+    height: auto;
+    min-height: 100px;
+    /* round corner */
+    border-radius: 5px;
+    margin-bottom: 24px;
+    padding: 12px;
+    margin: 0 4px;
+    font-size: 1rem;
+}
+
+.response-metadata {
+    padding: 12px;;
+}
+
+.response-footer {
+    display: flex;
+    align-content: center;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.response-chat-add {
+    display: inline-block;
+    font-size: 0.8rem;
+    padding: 4px;
+    margin: 0;
+    background: white;
+    color: black;
+}
+
+.response-finish-reason {
+    text-align: right;
+    font-size: 0.8rem;
+    color: #7f7f7f;
+    display: inline-block;
+    /* width: 100%; */
+}
+
+
+.response-metadata-table {
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+
+.tabs {
+    padding: 4px 12px;
+}
+
+.tablink {
+    min-width: 72px;
+    background-color: #949191;
+    font-size: 0.9rem;
+}
+
+.tablink.active {
+    background-color: rgb(56, 96, 240);
+}
+
+.errors {
+    display: none;
+    background-color: #da8888;
+    color: rgb(9, 2, 29);
+    padding: 4px 12px;
+    border-radius: 5px;
+}
+
+.errors.active {
+    display: block;
+}
