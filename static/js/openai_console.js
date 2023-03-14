@@ -139,11 +139,28 @@ function SetupExpandButton() {
     let expandBtns = document.getElementsByClassName("expand-btn");
     for (let i = 0; i < expandBtns.length; i++) {
         let expandBtn = expandBtns[i];
+        const panel = expandBtn.closest(".right-float-panel");
+        let autoCollapse = true;
         expandBtn.addEventListener("click", function (e) {
             e.preventDefault();
             // Find the cloest parent that is a .right-float-panel
-            const panel = expandBtn.closest(".right-float-panel");
+            autoCollapse = false;
             panel.classList.toggle('collapsed');
+        });
+        expandBtn.addEventListener("mouseover", function (e) {
+            e.preventDefault();
+            // Find the cloest parent that is a .right-float-panel
+            autoCollapse = false;
+            panel.classList.remove('collapsed');
+        });
+        /* mouse leave */
+        panel.addEventListener("mouseleave", function (e) {
+            e.preventDefault();
+            // Find the cloest parent that is a .right-float-panel
+            autoCollapse = true;
+            setTimeout(() => {
+                if(autoCollapse) panel.classList.add('collapsed');
+            }, 500);
         });
     }
 }
