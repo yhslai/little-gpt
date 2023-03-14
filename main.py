@@ -54,7 +54,8 @@ def hello_to(name : str) -> str:
 
 @app.route("/openai/console")
 def openai_console() -> str:
-    return render_template("openai_console.html")
+    conversations: list[Conversation.Conversation] = Conversation.get_conversations(1, 50)
+    return render_template("openai_console.html", conversations=conversations)
 
 
 @app.before_request
@@ -227,13 +228,14 @@ def get_conversations() -> Response:
     page = int(request.args.get("page", 1))
     per_page = int(request.args.get("per_page", 50))
     conversations: list[Conversation.Conversation] = Conversation.get_conversations(page, per_page)
-    return make_response(jsonify(conversations=conversations), 200)
+    return make_response(jsonify(conversations=[c.serialized for c in conversations]), 200)
 
 @app.get("/conversations/<conversation_id>")
 def get_conversation(conversation_id: str) -> Response:
     # cast conversation_id to int first then call Conversation.get_conversation()
-    conversation = Conversation.get_conversation(int(conversation_id))
-    return make_response(jsonify(conversation=conversation), 200)
+    conversation, messages = Conversation.get_conversation(int(conversation_id))
+    return make_response(jsonify(conversation=conversation.serialized,
+                                 messages=[m.serialized for m in messages]), 200)
 
 @app.post("/conversations")
 def create_conversation() -> Response:
@@ -241,11 +243,15 @@ def create_conversation() -> Response:
     # call Conversation.create_conversation() with the above parameters
     messages: list[Any] = json.loads(request.form.get("messages", "[]"))
     # parse messages json
-    title: str = request.form.get("title", "")
-    brief: str = request.form.get("brief", "")
+    # title: str = request.form.get("title", "")
+    # brief: str = request.form.get("brief", "")
+    # copy messages to a new list
+    
+    title, brief = openai_tools.generate_title_and_brief(messages)
+                                              
     is_template: bool = request.form.get("is_template", "false") == "true"
     conversation = Conversation.create_conversation(messages, title, brief, is_template)
-    return make_response(jsonify(conversation=conversation), 200)
+    return make_response(jsonify(conversation=conversation.serialized), 200)
 
 @app.put("/conversations/<conversation_id>")
 def update_conversation(conversation_id: str) -> Response:
@@ -253,17 +259,23 @@ def update_conversation(conversation_id: str) -> Response:
     # call Conversation.create_conversation() with the above parameters
     messages: list[Any] = json.loads(request.form.get("messages", "[]"))
     # parse messages json
-    title: str = request.form.get("title", "")
-    brief: str = request.form.get("brief", "")
+    # title: str = request.form.get("title", "")
+    # brief: str = request.form.get("brief", "")
+
+    if len(messages) > 4:
+        title, brief = None, None
+    else:
+        title, brief = openai_tools.generate_title_and_brief(messages)
+
     is_template: bool = request.form.get("is_template", "false") == "true"
     conversation = Conversation.update_conversation(int(conversation_id), messages, title, brief, is_template)
-    return make_response(jsonify(conversation=conversation), 200)
+    return make_response(jsonify(conversation=conversation.serialized), 200)
 
 @app.delete("/conversations/<conversation_id>")
 def delete_conversation(conversation_id: str) -> Response:
     # cast conversation_id to int first then call Conversation.delete_conversation()
     Conversation.delete_conversation(int(conversation_id))
-    return make_response(jsonify(), 200)
+    return make_response(jsonify({}), 200)
 
 
 

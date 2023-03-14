@@ -96,11 +96,6 @@
 	<div class="tab-container" data-tab="Edit">
 		<div class="left-column">
 			<form class="main-form" id="edit_form" action="/openai/api/edit" method="post">
-				<label class="inline-label" for="model">Model:</label>
-				<select name="model" value="text-davinci-edit-001">
-					<option value="text-davinci-edit-001">text-davinci-edit-001</option>
-					<option value="code-davinci-edit-001">code-davinci-edit-001</option>
-				</select><br>
 
 				<label for="input">Input:</label>
 				<textarea name="input" rows="6" cols="50"></textarea><br/>
@@ -162,28 +157,38 @@
 	</div>
 
 	<div class="tab-container chat" data-tab="Chat">
+		
 		<div class="right-float-panel collapsed">
 			<button class="expand-btn"></button>
 			<div class="float-panel-content">
-				<list class="conversations">
-					<item class="conversation-item">
-						<div class="conversation-title">Title of a Conversation</div>
-						<div class="conversation-brief">
-							Brief of a Conversation, Larom Ipsum is simply dummy text of the printing
-							and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s
-							 when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-						</div>
-					</item>
+				<ul class="conversations">
+					<!-- loop over conversations from flask -->
+					{% for conversation in conversations %}
+						<li class="conversation-item" data-id="{{ conversation.id }}">
+							<div class="conversation-title">{{ conversation.title }}</div>
+							<div class="conversation-brief">{{ conversation.brief }}</div>
+							<button class="conversation-delete-btn">X</button>
+						</li>
+					{% endfor %}
+				</ul>
 			</div>
 		</div>
 
 		<div class="left-column">
 			<form class="main-form" id="chat_form" action="/openai/api/chat" method="post">
-				<label class="inline-label" for="model">Model:</label>
-				<select name="model" value="gpt-3.5-turbo">
-					<option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
-					<option value="gpt-3.5-turbo-0301">gpt-3.5-turbo-0301</option>
-				</select><br>
+				<div class="row">
+					<div class="model-option">
+						<label class="inline-label" for="model">Model:</label>
+						<select name="model" value="gpt-3.5-turbo">
+							<option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+							<option value="gpt-3.5-turbo-0301">gpt-3.5-turbo-0301</option>
+						</select>
+					</div>
+					<div class="current-conversation-actions">
+						<button class="save-btn" hidden>Save</button>
+						<button class="save-as-new-btn">Save as New</button>
+					</div>
+				</div>
 
 				<label>Messages:</label>
 				<div class="messages">

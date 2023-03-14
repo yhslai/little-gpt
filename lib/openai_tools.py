@@ -90,3 +90,30 @@ def chat(
     )
     return response
     
+
+def generate_title_and_brief(messages: list[Any]) -> tuple[str, str]:
+    messages_copy = messages.copy()
+    messages_copy.append({
+        "role": "user",
+        "content": ("Please summarize our whole conversation to a title (about 8 words)"
+                    "and a brief description (about 50 words), "
+                    "in the following format, without any filler word:\nTitle: (title)\nBrief: (brief)")
+    })
+    
+    result = chat(
+            model="gpt-3.5-turbo",
+            messages=messages_copy,
+            max_tokens=250,
+            temperature=0,
+            n=1,
+            top_p=1,
+            presence_penalty=0,
+            frequency_penalty=0,
+    )
+
+    content = result["choices"][0]["message"]["content"]
+    # parse title and brief from content
+    title = content.split("Title: ")[1].split("Brief: ")[0].strip()
+    brief = content.split("Brief: ")[1].strip()
+    
+    return title, brief

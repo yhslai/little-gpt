@@ -48,14 +48,7 @@ function main() {
                 uiGotResponse(activeTab);
                 return response.text();
             }).then(data => {
-                try {
-                    let jsonData = JSON.parse(data);
-                    processResponse(jsonData, activeTab);
-                }
-                catch (e) {
-                    // If the error is not a JSON object, it's a network error
-                    processResponse({ 'errors': [data] }, activeTab);
-                }
+                gotFromAPI(data, activeTab, processResponse);
             }).catch(error => {
                 console.error(error);
             });
@@ -78,6 +71,9 @@ function main() {
                     && messageDivs[i-1].dataset.role != "user") return;
                 target.classList.add("hover");
                 let deleteButton = messagesDiv.getElementsByClassName("delete-message")[0];
+
+                if (!deleteButton) continue;
+
                 deleteButton.classList.remove("hidden");
                 // move deleteButton's position to the right of target
                 let targetRect = target.getBoundingClientRect();
@@ -105,6 +101,28 @@ function main() {
     });
 
     SetupExpandButton();
+    SetupConversationList();
+    SetupConversationActions();
+}
+
+function gotFromAPI(data, activeTab, notErrorCallback) {
+    try {
+        let jsonData = JSON.parse(data);
+        notErrorCallback(jsonData, activeTab);
+    }
+    catch (e) {
+        // Catch JSON parse error only
+        if (e instanceof SyntaxError) {
+            // If the error is not a JSON object, it's a network error
+            // remove <head> tag from data because it's a literal html
+            data = data.replace(/<head>[\s\S]*<\/head>/, "");
+            // combine consecutive <pre> tags into one
+            processResponse({ 'errors': [data] }, activeTab);
+        }
+        else {
+            throw e;
+        }
+    }
 }
 
 function startForcingPlainTextCopy() {
@@ -129,6 +147,192 @@ function SetupExpandButton() {
         });
     }
 }
+
+function SetupConversationList() {
+    let conversationList = document.getElementsByClassName("conversations")[0];
+    conversationList.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        let target = e.target;
+
+        let clickedItem = target.closest(".conversation-item");
+        if (target.classList.contains("conversation-delete-btn")) {
+            let id = clickedItem.dataset.id;
+            let activeTab = activeTabContainer();
+
+            fetch(`/conversations/${id}`, {
+                method: "DELETE"
+            }).then(response => {
+                return response.text();
+            }).then(data => {
+                gotFromAPI(data, activeTab, jsonData =>
+                { });
+                clickedItem.remove();
+            }).catch(error => {
+                console.error(error);
+            });
+        }
+        else if (clickedItem) {
+            let id = clickedItem.dataset.id;
+            
+            let activeTab = activeTabContainer();
+
+            fetch(`/conversations/${id}`, {
+                method: "GET"
+            }).then(response => {
+                return response.text();
+            }).then(data => {
+                gotFromAPI(data, activeTab, LoadConversation);
+            }).catch(error => {
+                console.error(error);
+            });
+        }
+    });
+}
+
+function LoadConversation(data, activeTab) {
+    let conversation = data.conversation;
+    let messages = data.messages;
+    allowUpdateSaveButton(conversation.id, activeTab);
+
+    let messagesDiv = activeTab.getElementsByClassName("messages")[0];
+    // clear all div children
+    for (let i = messagesDiv.children.length - 1; i >= 0; i--) {
+        let child = messagesDiv.children[i];
+        if (child.classList.contains("delete-message")) continue;
+        child.remove();
+    }
+    let lastDIv;
+    let lastRole = "";
+    for (let i = 0; i < messages.length; i++) {
+        let message = messages[i];
+        let messageDiv = createMessageDiv(message.role, message.content);
+        messagesDiv.appendChild(messageDiv);
+        lastDIv = messageDiv;
+        lastRole = message.role;
+    }
+    if (lastRole != "user") {
+        let messageDiv = createMessageDiv("user", "");
+        messagesDiv.appendChild(messageDiv);
+        lastDIv = messageDiv;
+    }
+    lastDIv.focus();
+}
+
+function allowUpdateSaveButton(conversationId, activeTab) {
+    let form = activeTab.getElementsByClassName("main-form")[0];
+    form.dataset.conversationId = conversationId;
+    let saveBtn = activeTab.getElementsByClassName("save-btn")[0];
+    saveBtn.hidden = false;
+}
+
+function SetupConversationActions() {
+    let conversationActionDiv = document.getElementsByClassName("current-conversation-actions")[0];
+    conversationActionDiv.addEventListener("click", function (e) {
+        e.preventDefault();
+        let target = e.target;
+        if (target.classList.contains("save-as-new-btn")) {
+            let title = '';
+            let brief = ''; // Backend will call ChatGPT to generate title and brief for us
+            let form = target.closest("form");
+            let actionUrl = '/conversations'
+            let data = new FormData(form);
+            populateMesssagesData(data, form);
+            data.append("title", title);
+            data.append("brief", brief);
+
+
+            let activeTab = activeTabContainer();
+
+            fetch(actionUrl, {
+                method: "POST",
+                body: data
+            }).then(response => {
+                target.innerHTML = "Save as New";
+                target.disabled = false;
+                return response.text();
+            }).then(data => {
+                gotFromAPI(data, activeTab, jsonData => {
+                    console.log("Saved: ")
+                    console.log(jsonData);
+                    AddToRightFloatPanel(jsonData);
+                    allowUpdateSaveButton(jsonData.conversation.id, activeTab);
+                });
+            }).catch(error => {
+                console.error(error);
+            });
+
+            target.disabled = true;
+            target.innerHTML = "Saving...";
+        }
+        else if (target.classList.contains('save-btn')) {
+            let title = '';
+            let brief = ''; // Backend will call ChatGPT to generate title and brief for us
+
+            let form = target.closest("form");
+            let actionUrl = `/conversations/${form.dataset.conversationId}`
+            let data = new FormData(form);
+            populateMesssagesData(data, form);
+            data.append("title", title);
+            data.append("brief", brief);
+
+            let activeTab = activeTabContainer();
+
+            fetch(actionUrl, {
+                method: "PUT",
+                body: data
+            }).then(response => {
+                target.innerHTML = "Save";
+                target.disabled = false;
+                return response.text();
+            }).then(data => {
+                gotFromAPI(data, activeTab, jsonData => {
+                    console.log("Saved (updated): ")
+                    console.log(jsonData);
+                    AddToRightFloatPanel(jsonData);
+                });
+            }).catch(error => {
+                console.error(error);
+            });
+            
+            target.disabled = true;
+            target.innerHTML = "Saving...";
+        }
+    });
+}
+
+function AddToRightFloatPanel(jsonData) {
+    let conversation = jsonData.conversation;
+    let conversationId = conversation.id;
+    let conversationTitle = conversation.title;
+    let conversationBrief = conversation.brief;
+    let addToRightFloatPanel = document.getElementsByClassName("right-float-panel")[0];
+    let conversationsUl = addToRightFloatPanel.getElementsByClassName("conversations")[0];
+    let conversationLi = document.createElement("li");
+    conversationLi.classList.add("conversation-item");
+    conversationLi.dataset.id = conversationId;
+    let titleDiv = document.createElement("div");
+    titleDiv.classList.add("conversation-title");
+    titleDiv.innerHTML = conversationTitle;
+    let briefDiv = document.createElement("div");
+    briefDiv.classList.add("conversation-brief");
+    briefDiv.innerHTML = conversationBrief;
+    conversationLi.appendChild(titleDiv);
+    conversationLi.appendChild(briefDiv);
+    let deleteBtn = document.createElement("button");
+    deleteBtn.classList.add("conversation-delete-btn");
+    deleteBtn.innerHTML = "X";
+    conversationLi.appendChild(deleteBtn);
+
+    // If already exists, remove it
+    let existingConversation = conversationsUl.querySelector(`[data-id="${conversationId}"]`);
+    if (existingConversation) {
+        conversationsUl.removeChild(existingConversation);
+    }
+    conversationsUl.prepend(conversationLi);
+}
+    
+    
 
 function populateMesssagesData(data, form) {
     let messageDivs = form.getElementsByClassName("message");
@@ -330,22 +534,32 @@ function addMessageToChat(message, activeTab) {
         lastAssistantMessageDiv.innerHTML = content;
     }
     else {
-        let messageDiv = document.createElement("div");
-        messageDiv.classList.add("message");
-        messageDiv.dataset.role = role;
-        messageDiv.innerHTML = content.replace(/\n/g, "<br>");
-        messageDiv.contentEditable = true;
         let messagesDiv = activeTab.getElementsByClassName("messages")[0];
+        let messageDiv = createMessageDiv(role, content);
         messagesDiv.appendChild(messageDiv);
-        let userMessageDiv = document.createElement("div");
-        userMessageDiv.classList.add("message");
-        userMessageDiv.dataset.role = "user";
-        userMessageDiv.dataset.placeholder = "Next message..."
-        userMessageDiv.contentEditable = true;
+        let userMessageDiv = createLastUserMessageDiv();
         messagesDiv.appendChild(userMessageDiv);
         // Put the cursor in the userMessageDiv
         userMessageDiv.focus();
     }
+}
+
+function createMessageDiv(role, content) {
+    let div = document.createElement("div");
+    div.classList.add("message");
+    div.dataset.role = role;
+    div.innerHTML = content.replace(/\n/g, "<br>");
+    div.contentEditable = true;
+    return div;
+}
+
+function createLastUserMessageDiv() {
+    let div = document.createElement("div");
+    div.classList.add("message");
+    div.dataset.role = "user";
+    div.dataset.placeholder = "Next message..."
+    div.contentEditable = true;
+    return div;
 }
 
 document.addEventListener("DOMContentLoaded", main);
