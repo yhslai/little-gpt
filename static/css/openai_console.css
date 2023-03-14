@@ -108,10 +108,10 @@ label.inline-label {
     color: #ffffff;
 }
 
+/*
 .tab-container.chat .delete-message.hidden {
-    /* display: none; */
 }
-
+*/
 
 .left-column label {
     font-size: 1rem;
@@ -246,4 +246,63 @@ textarea, select, input {
 
 .errors.active {
     display: block;
+}
+
+
+/* Right Float Panel */
+
+.right-float-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100%;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    transition: width 0.3s ease-out;
+    z-index: 9999;
+}
+
+.right-float-panel.collapsed {
+    width: 0;
+}
+
+.float-panel-content {
+    padding: 20px;
+}
+
+.right-float-panel .expand-btn {
+    position: absolute;
+    top: 20px;
+    left: -20px;
+    width: 40px;
+    height: 40px;
+    color: black;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.3s ease-out;
+    background-color: transparent;
+}
+
+.right-float-panel .expand-btn:before {
+    content: "";
+    display: block;
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    transform: translate(-50%, -50%);
+    background-image: url('/static/img/icon/collapse.png');
+    background-repeat: no-repeat;
+    background-size: 24px;
+}
+
+.right-float-panel.collapsed .expand-btn:before {
+    background-image: url('/static/img/icon/expand.png');
+}
+
+.expand-btn:hover {
+    transform: scale(1.1);
 }

@@ -104,6 +104,7 @@ function main() {
         }
     });
 
+    SetupExpandButton();
 }
 
 function startForcingPlainTextCopy() {
@@ -114,6 +115,19 @@ function startForcingPlainTextCopy() {
         clipdata.setData('text/html', text_only);
         e.preventDefault();
       });
+}
+
+function SetupExpandButton() {
+    let expandBtns = document.getElementsByClassName("expand-btn");
+    for (let i = 0; i < expandBtns.length; i++) {
+        let expandBtn = expandBtns[i];
+        expandBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            // Find the cloest parent that is a .right-float-panel
+            const panel = expandBtn.closest(".right-float-panel");
+            panel.classList.toggle('collapsed');
+        });
+    }
 }
 
 function populateMesssagesData(data, form) {

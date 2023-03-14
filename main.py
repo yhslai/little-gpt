@@ -6,6 +6,9 @@ import yaml
 from flask import Flask, Response, make_response, request
 from flask import render_template, jsonify
 from flask.logging import create_logger
+from flask_migrate import Migrate
+from models.db import db
+from models import Conversation, Message
 
 from lib import openai_tools, type_utils
 
@@ -14,21 +17,29 @@ LOGGER = create_logger(app)
 root_path = app.root_path
 
 
-
 def setup() -> None:
+    def database_setup(username: str, password: str, host: str, port: str, database: str) -> None:
+        app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{username}:{password}@{host}:{port}/{database}"
+        db.init_app(app)
+
+    config = None
     with open(os.path.join(root_path, "config.yaml"), "r", encoding='utf-8') as f:
         config = yaml.safe_load(f)
 
-        openai_tools.setup(config["openai"])
+    openai_tools.setup(config["openai"])
+    
+    db_config = config["db"]
+    database_setup(db_config["username"], db_config["password"],
+                   db_config["host"], db_config["port"], db_config["database"])
 
     logging.basicConfig()
     logging.getLogger().setLevel(logging.DEBUG)
     http_logger = logging.getLogger("urllib3")
     http_logger.setLevel(logging.DEBUG)
-
-
+        
 
 setup()
+migrate = Migrate(app, db)
 
 
 @app.route("/")
@@ -209,4 +220,53 @@ def openai_api_chat() -> Response:
     http_code = 200 if not errors else 400
     # Return the result and errors as JSON
     return make_response(jsonify(result=result, errors=errors), http_code)
+    
+
+@app.get("/conversations")
+def get_conversations() -> Response:
+    page = int(request.args.get("page", 1))
+    per_page = int(request.args.get("per_page", 50))
+    conversations: list[Conversation.Conversation] = Conversation.get_conversations(page, per_page)
+    return make_response(jsonify(conversations=conversations), 200)
+
+@app.get("/conversations/<conversation_id>")
+def get_conversation(conversation_id: str) -> Response:
+    # cast conversation_id to int first then call Conversation.get_conversation()
+    conversation = Conversation.get_conversation(int(conversation_id))
+    return make_response(jsonify(conversation=conversation), 200)
+
+@app.post("/conversations")
+def create_conversation() -> Response:
+    # get messages, title, brief, is_template from request.form
+    # call Conversation.create_conversation() with the above parameters
+    messages: list[Any] = json.loads(request.form.get("messages", "[]"))
+    # parse messages json
+    title: str = request.form.get("title", "")
+    brief: str = request.form.get("brief", "")
+    is_template: bool = request.form.get("is_template", "false") == "true"
+    conversation = Conversation.create_conversation(messages, title, brief, is_template)
+    return make_response(jsonify(conversation=conversation), 200)
+
+@app.put("/conversations/<conversation_id>")
+def update_conversation(conversation_id: str) -> Response:
+    # get messages, title, brief, is_template from request.form
+    # call Conversation.create_conversation() with the above parameters
+    messages: list[Any] = json.loads(request.form.get("messages", "[]"))
+    # parse messages json
+    title: str = request.form.get("title", "")
+    brief: str = request.form.get("brief", "")
+    is_template: bool = request.form.get("is_template", "false") == "true"
+    conversation = Conversation.update_conversation(int(conversation_id), messages, title, brief, is_template)
+    return make_response(jsonify(conversation=conversation), 200)
+
+@app.delete("/conversations/<conversation_id>")
+def delete_conversation(conversation_id: str) -> Response:
+    # cast conversation_id to int first then call Conversation.delete_conversation()
+    Conversation.delete_conversation(int(conversation_id))
+    return make_response(jsonify(), 200)
+
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
     
