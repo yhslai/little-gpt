@@ -96,7 +96,9 @@ def generate_title_and_brief(messages: list[Any]) -> tuple[str, str]:
     messages_copy.append({
         "role": "user",
         "content": ("Please summarize our whole conversation to a title (about 8 words)"
-                    "and a brief description (about 50 words), "
+                    "and a brief description (about 40 words), "
+                    "remember to explain what the subject we're talking about, "
+                    "and do NOT start with 'as a...'"
                     "in the following format, without any filler word:\nTitle: (title)\nBrief: (brief)")
     })
     
