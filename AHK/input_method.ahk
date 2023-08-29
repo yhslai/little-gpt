@@ -12,7 +12,7 @@ SetTitleMatchMode, 2
 
 Loop {
   SetTitleMatchMode, RegEx
-  regex := "ahk_exe i)(.*Code.*)|(.*Blender.*)|(.*photoshop.*)|(.*WindowsTerminal.*)|(.*krita.*)|(.*CLIPStudioPaint.*)|(.*houdini.*)|(.*UnrealEditor.*)|(.*JupyterLab.*)|(.*rider64.exe.*)|(.*ZBrush.exe.*)"
+  regex := "ahk_exe i)(.*Code.*)|(.*Blender.*)|(.*photoshop.*)|(.*WindowsTerminal.*)|(.*krita.*)|(.*CLIPStudioPaint.*)|(.*houdini.*)|(.*UnrealEditor.*)|(.*JupyterLab.*)|(.*rider64.exe.*)|(.*ZBrush.exe.*)|(.*Substance.*)|(.*Unity.exe.*)"
   ; regex := "(.*Visual Studio Code.*)|(.*Blender.*)|(.*Photoshop.*)"
   WinWaitActive, %regex%
   SetDefaultKeyboard(0x0409)  ; English

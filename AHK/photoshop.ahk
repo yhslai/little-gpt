@@ -31,6 +31,12 @@ NumpadMult::F15
 +NumpadMult::+F15
 
 
+MButton::
+Send {Space Down}{LButton Down}
+Keywait, MButton
+Send {LButton Up}{Space Up}
+Return
+
 
 ; ; Map 'C' to return to toggle Color Picker
 ; #IfWinActive Color Picker ahk_exe Photoshop.exe 
