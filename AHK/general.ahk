@@ -72,7 +72,9 @@ Send {)} ; Send closing parenthesis
 return
 
 ; Make CapsLock behave like Ctrl
-CapsLock::Ctrl
+$CapsLock::Ctrl
+return
 
 ; Make Ctrl+CapsLock behave like CapsLock
-^CapsLock::CapsLock
+LCtrl & CapsLock::CapsLock
+return
