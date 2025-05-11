@@ -59,13 +59,22 @@ return
 LCtrl & CapsLock::CapsLock
 return
 
-; Smart double quote
+; Smart double quote (Alt+' for opening, Shift+Alt+' for closing)
 !'::
     Send {“}
 return
 
 +!'::
     Send {”}
+return
+
+; Smart single quote (Ctrl+' for opening, Ctrl+Shift+' for closing)
+^'::
+    Send {’}
+return
+
+^+'::
+    Send {‘}
 return
 
 ; Ctrl+Shift+Z to Ctrl+Y
