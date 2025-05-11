@@ -58,3 +58,18 @@ return
 ; Make Ctrl+CapsLock behave like CapsLock
 LCtrl & CapsLock::CapsLock
 return
+
+; Smart double quote
+!'::
+    Send {“}
+return
+
++!'::
+    Send {”}
+return
+
+; Ctrl+Shift+Z to Ctrl+Y
+#IfWinActive ahk_exe InstaMat Studio.exe
+$^+z::Send ^y
+return
+
