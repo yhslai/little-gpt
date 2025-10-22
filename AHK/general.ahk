@@ -68,14 +68,14 @@ return
     Send {”}
 return
 
-; Smart single quote (Ctrl+' for opening, Ctrl+Shift+' for closing)
-^'::
-    Send {’}
-return
+;; Smart single quote (Ctrl+' for opening, Ctrl+Shift+' for closing)
+;^'::
+;    Send {’}
+;return
 
-^+'::
-    Send {‘}
-return
+;^+'::
+;    Send {‘}
+;return
 
 ; Ctrl+Shift+Z to Ctrl+Y
 #IfWinActive ahk_exe InstaMat Studio.exe
