@@ -23,27 +23,32 @@ Set-PSReadlineKeyHandler -Key Ctrl+s -Function ForwardSearchHistory
 Set-PSReadlineKeyHandler -Key Ctrl+f -Function ForwardChar
 
 $env:Path += ";$HOME\github\little_windows\bin"
-$env:Path += ";C:\Program Files\cmake\bin"
-$env:Path += ";C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build"
-$env:Path += ";C:\Program Files\Perforce"
-$env:Path += ";C:\Program Files\PostgreSQL\15\bin"
-$env:Path += ";C:\Program Files\lilypond-2.24.1\bin"
 
-# Linux HOME
-$env:LHOME = "\\wsl$\Ubuntu\home\raincole"
 
 function global:prompt {
     $ESC = [char]27
-    $regex = [regex]::Escape($HOME) + "(\\.*)*$"
-    "$ESC[36m$($executionContext.SessionState.Path.CurrentLocation.Path -replace $regex, '~$1')$('>' * ($nestedPromptLevel + 1)) $ESC[0m";
+    $loc = $executionContext.SessionState.Path.CurrentLocation
+
+    $displayPath = $loc
+    if ($loc.Provider.Name -eq "FileSystem") {
+        $current = [System.IO.Path]::GetFullPath($loc.ProviderPath).TrimEnd('\')
+        $homePath = [System.IO.Path]::GetFullPath($HOME).TrimEnd('\')
+
+        if ($current.StartsWith($homePath, [System.StringComparison]::OrdinalIgnoreCase)) {
+            $relative = $current.Substring($homePath.Length).TrimStart('\')
+            $displayPath = if ($relative) { "~\$relative" } else { "~" }
+        }
+    }
+
+    $out = ""
+    if ($loc.Provider.Name -eq "FileSystem") {
+        $out += "$([char]27)]9;9;`"$($loc.ProviderPath)`"$([char]27)\"
+    }
+    $out += $displayPath
+
+    return "$ESC[36m$out$('>' * ($nestedPromptLevel + 1)) $ESC[0m"
 }
 
 $current_directory = pwd
 & 'C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\Launch-VsDevShell.ps1'
 cd $current_directory
-
-# Powershell doesn't change cursor back to verticl line upon exiting vim
-# See https://github.com/microsoft/terminal/issues/4335#issuecomment-1238989185
-function vim {
-    & "vim.exe" $args && echo "`e[5 q"
-}
