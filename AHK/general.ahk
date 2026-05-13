@@ -19,66 +19,7 @@ Sleep, 1000
 SplashTextOff
 return
 
-; Mac-style alt+`
-`::ShiftAltTab
 
-
-#IfWinNotActive ahk_exe Code.exe
-
-; PageUp / PageDown / Home / End
-RCtrl & Up::
-Send {RCtrl up}{PgUp}
-Return
-RCtrl & Down::
-Send {RCtrl up}{PgDn}
-Return
-RCtrl & Left::
-Send {RCtrl up}{Home}
-Return
-RCtrl & Right::
-Send {RCtrl up}{End}
-Return
-
-
-; Emulate scroll
-RAlt & up::
-Loop 6
-    Click, WheelUp
-return
-RAlt & down::
-Loop 6
-    Click, WheelDown
-return
-
-
-; Make CapsLock behave like Ctrl
-$CapsLock::Ctrl
-return
-
-; Make Ctrl+CapsLock behave like CapsLock
-LCtrl & CapsLock::CapsLock
-return
-
-; Smart double quote (Alt+' for opening, Shift+Alt+' for closing)
-!'::
-    Send {“}
-return
-
-+!'::
-    Send {”}
-return
-
-;; Smart single quote (Ctrl+' for opening, Ctrl+Shift+' for closing)
-;^'::
-;    Send {’}
-;return
-
-;^+'::
-;    Send {‘}
-;return
-
-; Ctrl+Shift+Z to Ctrl+Y
-#IfWinActive ahk_exe InstaMat Studio.exe
-$^+z::Send ^y
-return
-
+; Mac-style alt+` (SC029 = backtick)
+LAlt & Tab::AltTab
+LAlt & SC029::ShiftAltTab
